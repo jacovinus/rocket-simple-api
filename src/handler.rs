@@ -86,3 +86,29 @@ pub async fn create_todo_handler(
     };
     Ok(Json(json_response))
 }
+
+// get todo by id
+#[get("/todos<id>")]
+pub async fn get_todo_handler(
+    id: String,
+    data: &State<AppState>,
+) -> Result<Json<SingleTodoResponse>, Custom<Json<GenericResponse>>> {
+    let vec = data.todo_db.lock().unwrap();
+
+    for todo in vec.iter() {
+        if todo.id == Some(id.to_owned()) {
+            let json_response = SingleTodoResponse {
+                status: "success".to_string(),
+                data: TodoData { todo: todo.clone() },
+            };
+            return Ok(Json(json_response));
+        }
+    }
+
+    let error_response = GenericResponse {
+        status: "fail".to_string(),
+        message: format!("Todo with id {} not found", id),
+    };
+
+    Err(Custom(Status::NotFound, Json(error_response)))
+}
