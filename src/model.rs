@@ -6,17 +6,15 @@ use std::sync::{Arc, Mutex};
 #[derive(Debug, Deserealize, Serialize, Clone)]
 pub struct Todo {
     pub id: Option<String>,
-    pub title: String, 
-    pub content: String, 
+    pub title: String,
+    pub content: String,
     pub completed: Option<bool>,
     pub createdAt: Option<DateTime<Utc>>,
     pub updatedAt: Option<DateTime<Utc>>,
 }
 
 pub struct AppState {
-
     pub todo_db: Arc<Mutex<Vec<Todo>>>,
-
 }
 
 impl ApppState {
